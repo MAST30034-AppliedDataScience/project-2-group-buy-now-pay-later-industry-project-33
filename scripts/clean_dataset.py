@@ -1,6 +1,8 @@
 import re
 import pandas as pd
+import os
 
+# Cleaning function for external datasets
 def general_clean_external_dataset(df):
     """
     Rename columns of the given dataframe and drop unused columns.
@@ -25,6 +27,30 @@ def general_clean_external_dataset(df):
 
     return df
 
+
+def etl_external_df():
+    """
+    Apply clean function to each external dataset.
+    Save clean data into curated folder.
+    """
+
+    dataflow_ids = ['C21_G33_SA2', 'C21_G38_SA2', 'C21_G40_SA2', 'C21_G02_SA2']
+    base_path = '../data/tables/sa2_dataset/main/'
+
+    # Create path in curated folder
+    return_path = '../data/curated/sa2_dataset/'
+    os.makedirs(return_path, exist_ok=True)
+
+    for dataflow_id in dataflow_ids:
+        file_path = os.path.join(base_path, f'{dataflow_id}_filtered.csv')
+        clean_file_path = os.path.join(return_path, f'{dataflow_id}_clean.csv')
+
+        data = pd.read_csv(file_path)
+        clean_data = general_clean_external_dataset(data)
+        clean_data.to_csv(clean_file_path, index=False)
+
+
+# Cleaning functions for merchant dataset
 
 def split_tag_value(val):
     """
@@ -54,12 +80,12 @@ def split_tag_value(val):
     return values
 
 
-def clean_merchant_df(merchant_csv):
+def clean_merchant_df(merchant):
     """
-    Extract 3 values in the tags column of the csv.
-    Return the modified csv with 3 new columns.
+    Transform merchant parquet to csv, extract 3 values in the `tags` column.
+    Save the modified csv with 3 new columns in curated folder.
     """
-
+    merchant_csv = merchant.toPandas()  
     
     split_values = []
     
@@ -70,4 +96,6 @@ def clean_merchant_df(merchant_csv):
 
     clean_merchant_csv = pd.concat([merchant_csv, split_cols], axis=1).drop("tags", axis=1)
 
-    return clean_merchant_csv
+    # Save file to curated folder
+    os.makedirs("../data/curated/part_1/", exist_ok=True)
+    clean_merchant_csv.to_csv("../data/curated/part_1/clean_merchant.csv", index=False)
