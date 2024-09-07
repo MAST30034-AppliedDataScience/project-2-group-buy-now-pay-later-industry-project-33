@@ -1,6 +1,8 @@
 import re
 import pandas as pd
 import os
+import geopandas as gpd
+from shapely import wkt
 
 # Cleaning function for external datasets
 def general_clean_external_dataset(df):
@@ -73,6 +75,7 @@ def split_tag_value(val):
     values.append(parts[1].strip())
     details = parts[2].strip()
     
+    # Extract value of take_rate
     take_rate_match = re.search(r'take rate: ([0-9.]+)', details)
     take_rate = float(take_rate_match.group(1)) if take_rate_match else None
     values.append(take_rate)
@@ -84,6 +87,7 @@ def clean_merchant_df(merchant):
     """
     Transform merchant parquet to csv, extract 3 values in the `tags` column.
     Save the modified csv with 3 new columns in curated folder.
+    Return dataframe after cleaning
     """
     merchant_csv = merchant.toPandas()  
     
@@ -92,10 +96,33 @@ def clean_merchant_df(merchant):
     for val in merchant_csv.tags:
         split_values.append(split_tag_value(val))
     
+    # Merge three new columns to original dataframe
     split_cols = pd.DataFrame(split_values, columns=["goods", "symbol", "take_rate"])
-
     clean_merchant_csv = pd.concat([merchant_csv, split_cols], axis=1).drop("tags", axis=1)
 
     # Save file to curated folder
     os.makedirs("../data/curated/part_1/", exist_ok=True)
     clean_merchant_csv.to_csv("../data/curated/part_1/clean_merchant.csv", index=False)
+
+    return clean_merchant_csv
+
+
+
+# Cleaning function for shapefile of SA2 region
+def clean_shapefile_sa2(gdf):
+    """
+    Normalize column names and remove unused columns, save new data to `curated` folder.
+    Return shapefile after cleaning
+    """
+    # Only keep SA2 columns
+    gdf = gdf[['SA2_CODE21', 'SA2_NAME21', 'STE_NAME21', 'AUS_CODE21' , 'geometry']]
+    
+    # Only keep values with non-missing geometry
+    gdf = gdf[gdf.geometry.isna() == False]
+
+    gdf.columns = gdf.columns.str.lower()
+
+    os.makedirs("../data/curated/sa2_boundary/", exist_ok=True)
+    gdf.to_file("../data/curated/sa2_boundary/SA2_2021_AUST_GDA2020_clean.shp", driver='ESRI Shapefile')
+
+    return gdf
