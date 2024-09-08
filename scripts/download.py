@@ -1,5 +1,6 @@
 import os
 import pandas as pd
+import requests
 
 def download_ABS_dataset(dataflow_ids= ['C21_G33_SA2', 'C21_G38_SA2', 'C21_G40_SA2', 'C21_G02_SA2']):
     """
