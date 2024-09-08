@@ -27,9 +27,9 @@ The goal is to find the top 100 merchants that our new BNPL should accept
      ```
 
 3. **Download Data:**
-   - **Main Data:** Please download it from Canvas, unzip each zip files and put them into data/table/part_1, part_2, part_3 and part_4 folders
-   - **SA2 Boundary Files:** Download from [SA2_2021_AUST_SHP_GDA2020.zip](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files/SA2_2021_AUST_SHP_GDA2020.zip) and place it in `data/tables`.
-   - **ABS Cencus 2021 Dataset:** Run all cells in `download_clean_external_dataset`, or run function `download_ABS_dataset` from `download.py`.
+   - **Main Data:** Please download it from Canvas, unzip each zip files and put them into data/table/part_1, part_2, part_3 and part_4 folders.
+   - **SA2 Boundary Files:** Download from [SA2_2021_AUST_SHP_GDA2020.zip](https://www.abs.gov.au/statistics/standards/australian-statistical-geography-standard-asgs-edition-3/jul2021-jun2026/access-and-downloads/digital-boundary-files/SA2_2021_AUST_SHP_GDA2020.zip) and place it in `data/tables/sa2_boundary` folder.
+   - **ABS Cencus 2021 Dataset:** Run all cells in `download_clean_external_dataset`, or run function `download_ABS_dataset` from `download.py`. Raw data is stored at `data/tables/sa2_dataset/main`.
 
 4. **Data Cleaning:**
    - Run all cells in `cleaning_main.ipynb` and `download_clean_external_dataset.ipynb`in order, or run funtion `clean_external_df`, `clean_merchant_df` and `clean_shapefile_sa2`. Please read function docstring to use it correctly.
