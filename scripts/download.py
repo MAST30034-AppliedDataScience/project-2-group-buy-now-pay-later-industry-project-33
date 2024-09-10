@@ -37,11 +37,7 @@ def download_ABS_dataset(dataflow_ids= ['C21_G33_SA2', 'C21_G38_SA2', 'C21_G40_S
         
             # Filter location
             data = pd.read_csv(file_path)
-            if dataflow_id == 'C21_G02_SA2':
-                filtered_data = data[data['MEDAVG'] == 5]
-                filtered_data = data[data['REGION_TYPE'] == 'SA2']
-            else:
-                filtered_data = data[data['REGION_TYPE'] == 'SA2']
+            filtered_data = data[data['REGION_TYPE'] == 'SA2']
                 
             filtered_data.to_csv(filtered_file_path, index=False)
             

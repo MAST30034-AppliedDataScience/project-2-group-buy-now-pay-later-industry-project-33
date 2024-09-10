@@ -1,8 +1,8 @@
 import re
 import pandas as pd
 import os
-import geopandas as gpd
-from shapely import wkt
+from pyspark.sql.functions import udf, col
+from pyspark.sql.types import StringType, FloatType, StructType, StructField
 
 # Cleaning function for external datasets
 def clean_single_external_df(df):
@@ -14,10 +14,10 @@ def clean_single_external_df(df):
     rename_cols = {
         "HIND": "household_income_weekly",
         "HHCD": "household_composition",
-        "REGION": "region_id",
+        "REGION": "sa2_code",
         "STATE": "state",
         "OBS_VALUE": "obs_value",
-        "MEDAVG": "monthly_mortgage_median",
+        "MEDAVG": "type_of_value_code",
         "STRD": "dwelling_structure",
         "MRERD": "monthly_mortgage_repayments_ranges",
         "RNTRD": "weekly_rent_range",
@@ -85,8 +85,7 @@ def split_tag_value(val):
 
 def clean_merchant_df(merchant):
     """
-    Transform merchant parquet to csv, extract 3 values in the `tags` column.
-    Save the modified csv with 3 new columns in curated folder.
+    Extract 3 values in the `tags` column, and save the modified file with 3 new columns in curated folder.
     Return dataframe after cleaning
     """
     merchant_csv = merchant.toPandas()  
@@ -97,12 +96,12 @@ def clean_merchant_df(merchant):
         split_values.append(split_tag_value(val))
     
     # Merge three new columns to original dataframe
-    split_cols = pd.DataFrame(split_values, columns=["goods", "symbol", "take_rate"])
+    split_cols = pd.DataFrame(split_values, columns=["goods", "revenue_level", "take_rate"])
     clean_merchant_csv = pd.concat([merchant_csv, split_cols], axis=1).drop("tags", axis=1)
 
     # Save file to curated folder
     os.makedirs("../data/curated/part_1/", exist_ok=True)
-    clean_merchant_csv.to_csv("../data/curated/part_1/clean_merchant.csv", index=False)
+    clean_merchant_csv.to_parquet("../data/curated/part_1/tbl_merchants.parquet", index=False)
 
     return clean_merchant_csv
 
