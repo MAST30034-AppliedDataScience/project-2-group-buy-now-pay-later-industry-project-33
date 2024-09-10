@@ -102,9 +102,9 @@ def clean_merchant_df(merchant):
 
     # Save file to curated folder
     os.makedirs("../data/curated/part_1/", exist_ok=True)
-    clean_merchant_csv.to_csv("../data/curated/part_1/clean_merchant.csv", index=False)
-
-    return clean_merchant_csv
+    clean_merchant_csv.to_parquet("../data/curated/part_1/clean_merchant.parquet", )
+    
+    return
 
 
 
