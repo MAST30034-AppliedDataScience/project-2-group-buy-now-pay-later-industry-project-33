@@ -48,5 +48,12 @@ The goal is to find the top 100 merchants that our new BNPL should accept
 9. **Ranking:**
    - For overall ranking of merchants, run notebook `10 ranking_initial.ipynb`.
    - For ranking merchants by segments, run notebooks `11 ranking_manual_segments.ipynb` and `12 ranking_kmeans_segments.ipynb`.
+   - For final rankings, run notebook `13 ranking_final.ipynb`.
+
+10. **Visualizations:**
+   - For visualizations, view / run notebook `14 visualizations.ipynb`.
+
+11. **Results Summary:**
+   - For all results summary of this project, view / run notebook `15 summary.ipynb`.
 
 
